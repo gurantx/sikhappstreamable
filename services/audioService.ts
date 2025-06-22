@@ -259,7 +259,7 @@ export const NITNEM_AUDIO_TRACKS: { [baniId: string]: AudioTrack } = {
     id: 'tav_prasad_savaiye',
     title: 'Tav Prasad Savaiye',
     artist: 'Bhai Harjinder Singh',
-    url: 'https://cdn.jsdelivr.net/gh/gurantx/streamsikh@main/TAV-PRASAD-SAVAIYE.mp3',
+    url: 'https://cdn.jsdelivr.net/gh/gurantx/streamsikh@main/Tav-Prasad-Savaiye.mp3',
     duration: 480000, // 8 minutes
     baniId: '3'
   },
