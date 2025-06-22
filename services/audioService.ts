@@ -251,7 +251,7 @@ export const NITNEM_AUDIO_TRACKS: { [baniId: string]: AudioTrack } = {
     id: 'jaap_sahib',
     title: 'Jaap Sahib',
     artist: 'Bhai Harjinder Singh',
-    url: 'https://cdn.jsdelivr.net/gh/gurantx/streamsikh@main/JAAP-SAHIB.mp3',
+    url: 'https://cdn.jsdelivr.net/gh/gurantx/streamsikh@main/Jaap-Sahib.mp3',
     duration: 2400000, // 40 minutes
     baniId: '2'
   },
