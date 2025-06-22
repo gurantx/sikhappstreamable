@@ -65,17 +65,6 @@ class AudioService {
     try {
       await this.initialize();
       
-      // Check for web platform limitations
-      if (Platform.OS === 'web') {
-        console.warn('Web platform audio playback may be limited by CORS policies. External audio URLs may not work properly.');
-        
-        // For web platform, we need to handle CORS issues
-        // The audio URLs from external domains may be blocked
-        if (track.url.includes('sikhnet.com') || !track.url.startsWith(window.location.origin)) {
-          throw new Error('External audio streaming is blocked by CORS policies on web platform. Audio files need to be served with appropriate CORS headers or hosted on the same domain.');
-        }
-      }
-      
       // Stop current track if playing
       if (this.sound) {
         await this.stop();
@@ -248,13 +237,13 @@ class AudioService {
 // Export singleton instance
 export const audioService = new AudioService();
 
-// Audio tracks for each Nitnem bani - Using working URLs for all platforms
+// Audio tracks for each Nitnem bani - Using the streamable link for Japji Sahib
 export const NITNEM_AUDIO_TRACKS: { [baniId: string]: AudioTrack } = {
   '1': {
     id: 'japji_sahib',
     title: 'Japji Sahib',
     artist: 'Bhai Harjinder Singh',
-    url: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav', // Using working placeholder for all platforms
+    url: 'https://cdn.jsdelivr.net/gh/gurantx/streamsikh@main/Japji-Sahib.mp3',
     duration: 1800000, // 30 minutes in milliseconds
     baniId: '1'
   },
@@ -262,7 +251,7 @@ export const NITNEM_AUDIO_TRACKS: { [baniId: string]: AudioTrack } = {
     id: 'jaap_sahib',
     title: 'Jaap Sahib',
     artist: 'Bhai Harjinder Singh',
-    url: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav', // Using working placeholder for all platforms
+    url: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav', // Placeholder for other banis
     duration: 2400000, // 40 minutes
     baniId: '2'
   },
@@ -270,7 +259,7 @@ export const NITNEM_AUDIO_TRACKS: { [baniId: string]: AudioTrack } = {
     id: 'tav_prasad_savaiye',
     title: 'Tav Prasad Savaiye',
     artist: 'Bhai Harjinder Singh',
-    url: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav', // Using working placeholder for all platforms
+    url: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav', // Placeholder for other banis
     duration: 480000, // 8 minutes
     baniId: '3'
   },
@@ -278,7 +267,7 @@ export const NITNEM_AUDIO_TRACKS: { [baniId: string]: AudioTrack } = {
     id: 'chaupai_sahib',
     title: 'Chaupai Sahib',
     artist: 'Bhai Harjinder Singh',
-    url: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav', // Using working placeholder for all platforms
+    url: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav', // Placeholder for other banis
     duration: 600000, // 10 minutes
     baniId: '4'
   },
@@ -286,7 +275,7 @@ export const NITNEM_AUDIO_TRACKS: { [baniId: string]: AudioTrack } = {
     id: 'anand_sahib',
     title: 'Anand Sahib',
     artist: 'Bhai Harjinder Singh',
-    url: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav', // Using working placeholder for all platforms
+    url: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav', // Placeholder for other banis
     duration: 1200000, // 20 minutes
     baniId: '5'
   },
@@ -294,7 +283,7 @@ export const NITNEM_AUDIO_TRACKS: { [baniId: string]: AudioTrack } = {
     id: 'rehras_sahib',
     title: 'Rehras Sahib',
     artist: 'Bhai Harjinder Singh',
-    url: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav', // Using working placeholder for all platforms
+    url: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav', // Placeholder for other banis
     duration: 900000, // 15 minutes
     baniId: '6'
   },
@@ -302,7 +291,7 @@ export const NITNEM_AUDIO_TRACKS: { [baniId: string]: AudioTrack } = {
     id: 'kirtan_sohila',
     title: 'Kirtan Sohila',
     artist: 'Bhai Harjinder Singh',
-    url: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav', // Using working placeholder for all platforms
+    url: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav', // Placeholder for other banis
     duration: 300000, // 5 minutes
     baniId: '8'
   },
@@ -310,7 +299,7 @@ export const NITNEM_AUDIO_TRACKS: { [baniId: string]: AudioTrack } = {
     id: 'sukhmani_sahib',
     title: 'Sukhmani Sahib',
     artist: 'Bhai Harjinder Singh',
-    url: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav', // Using working placeholder for all platforms
+    url: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav', // Placeholder for other banis
     duration: 3600000, // 60 minutes
     baniId: '10'
   }
