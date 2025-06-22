@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, List, Shuffle } from 'lucide-react-native';
+import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, List, Clock } from 'lucide-react-native';
 import { useState, useEffect } from 'react';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 import AudioPlayer from '@/components/AudioPlayer';
@@ -14,6 +14,7 @@ interface PlaylistItem {
   artist: string;
   duration: number;
   baniId: string;
+  isNitnem: boolean;
 }
 
 const playlist: PlaylistItem[] = [
@@ -23,7 +24,8 @@ const playlist: PlaylistItem[] = [
     titleGurmukhi: 'ਜਪੁਜੀ ਸਾਹਿਬ',
     artist: 'Bhai Harjinder Singh',
     duration: 1800000,
-    baniId: '1'
+    baniId: '1',
+    isNitnem: true
   },
   {
     id: '2',
@@ -31,7 +33,8 @@ const playlist: PlaylistItem[] = [
     titleGurmukhi: 'ਜਾਪੁ ਸਾਹਿਬ',
     artist: 'Bhai Harjinder Singh',
     duration: 2400000,
-    baniId: '2'
+    baniId: '2',
+    isNitnem: true
   },
   {
     id: '3',
@@ -39,7 +42,8 @@ const playlist: PlaylistItem[] = [
     titleGurmukhi: 'ਤਵ ਪ੍ਰਸਾਦਿ ਸਵਈਏ',
     artist: 'Bhai Harjinder Singh',
     duration: 480000,
-    baniId: '3'
+    baniId: '3',
+    isNitnem: true
   },
   {
     id: '4',
@@ -47,7 +51,8 @@ const playlist: PlaylistItem[] = [
     titleGurmukhi: 'ਚੌਪਈ ਸਾਹਿਬ',
     artist: 'Bhai Harjinder Singh',
     duration: 600000,
-    baniId: '4'
+    baniId: '4',
+    isNitnem: true
   },
   {
     id: '5',
@@ -55,7 +60,8 @@ const playlist: PlaylistItem[] = [
     titleGurmukhi: 'ਆਨੰਦੁ ਸਾਹਿਬ',
     artist: 'Bhai Harjinder Singh',
     duration: 1200000,
-    baniId: '5'
+    baniId: '5',
+    isNitnem: true
   },
   {
     id: '6',
@@ -63,7 +69,8 @@ const playlist: PlaylistItem[] = [
     titleGurmukhi: 'ਰਹਰਾਸ ਸਾਹਿਬ',
     artist: 'Bhai Harjinder Singh',
     duration: 900000,
-    baniId: '6'
+    baniId: '6',
+    isNitnem: true
   },
   {
     id: '8',
@@ -71,7 +78,8 @@ const playlist: PlaylistItem[] = [
     titleGurmukhi: 'ਕੀਰਤਨ ਸੋਹਿਲਾ',
     artist: 'Bhai Harjinder Singh',
     duration: 300000,
-    baniId: '8'
+    baniId: '8',
+    isNitnem: true
   },
   {
     id: '10',
@@ -79,14 +87,14 @@ const playlist: PlaylistItem[] = [
     titleGurmukhi: 'ਸੁਖਮਨੀ ਸਾਹਿਬ',
     artist: 'Bhai Harjinder Singh',
     duration: 3600000,
-    baniId: '10'
+    baniId: '10',
+    isNitnem: false
   }
 ];
 
 export default function PlayScreen() {
   const audioPlayer = useAudioPlayer();
   const [showPlaylist, setShowPlaylist] = useState(false);
-  const [shuffleMode, setShuffleMode] = useState(false);
 
   const handlePlayTrack = async (baniId: string) => {
     await audioPlayer.playBani(baniId);
@@ -103,30 +111,20 @@ export default function PlayScreen() {
     }
   };
 
-  const playRandomTrack = () => {
-    const randomIndex = Math.floor(Math.random() * playlist.length);
-    const randomTrack = playlist[randomIndex];
-    handlePlayTrack(randomTrack.baniId);
-  };
-
   const getCurrentTrackInfo = () => {
     if (!audioPlayer.currentTrack) return null;
     return playlist.find(item => item.baniId === audioPlayer.currentTrack?.baniId);
   };
 
   const currentTrackInfo = getCurrentTrackInfo();
+  const nitnems = playlist.filter(item => item.isNitnem);
+  const otherBanis = playlist.filter(item => !item.isNitnem);
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Audio Player</Text>
         <View style={styles.headerButtons}>
-          <TouchableOpacity 
-            style={[styles.headerButton, shuffleMode && styles.headerButtonActive]} 
-            onPress={() => setShuffleMode(!shuffleMode)}
-          >
-            <Shuffle size={20} color={shuffleMode ? "#10b981" : "#ffffff"} />
-          </TouchableOpacity>
           <TouchableOpacity 
             style={[styles.headerButton, showPlaylist && styles.headerButtonActive]} 
             onPress={() => setShowPlaylist(!showPlaylist)}
@@ -188,66 +186,107 @@ export default function PlayScreen() {
           </View>
         )}
 
-        {/* Quick Actions */}
-        <View style={styles.quickActionsSection}>
-          <Text style={styles.sectionTitle}>Quick Actions</Text>
-          <View style={styles.quickActionsContainer}>
-            <TouchableOpacity style={styles.quickActionCard} onPress={playRandomTrack}>
-              <Shuffle size={24} color="#10b981" />
-              <Text style={styles.quickActionTitle}>Random Bani</Text>
-              <Text style={styles.quickActionSubtitle}>Play random audio</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity style={styles.quickActionCard} onPress={() => handlePlayTrack('1')}>
-              <Play size={24} color="#10b981" />
-              <Text style={styles.quickActionTitle}>Start Nitnem</Text>
-              <Text style={styles.quickActionSubtitle}>Begin with Japji</Text>
-            </TouchableOpacity>
+        {/* Nitnem Section */}
+        <View style={styles.nitnemeSection}>
+          <View style={styles.nitnemeHeader}>
+            <Clock size={24} color="#10b981" />
+            <View style={styles.nitnemeHeaderText}>
+              <Text style={styles.sectionTitle}>Nitnem</Text>
+              <Text style={styles.nitnemeSubtitle}>ਨਿਤਨੇਮ • Daily Prayers</Text>
+            </View>
+          </View>
+          
+          <Text style={styles.nitnemeDescription}>
+            Complete collection of daily Sikh prayers for spiritual practice throughout the day
+          </Text>
+
+          <View style={styles.nitnemeGrid}>
+            {nitnems.map((item, index) => (
+              <TouchableOpacity 
+                key={item.id} 
+                style={[
+                  styles.nitnemeItem,
+                  currentTrackInfo?.id === item.id && styles.nitnemeItemActive
+                ]}
+                onPress={() => handlePlayTrack(item.baniId)}
+              >
+                <View style={styles.nitnemeItemNumber}>
+                  <Text style={styles.nitnemeItemNumberText}>{index + 1}</Text>
+                </View>
+                
+                <View style={styles.nitnemeItemInfo}>
+                  <Text style={[
+                    styles.nitnemeItemTitle,
+                    currentTrackInfo?.id === item.id && styles.nitnemeItemTitleActive
+                  ]}>
+                    {item.title}
+                  </Text>
+                  <Text style={styles.nitnemeItemTitleGurmukhi}>{item.titleGurmukhi}</Text>
+                  <Text style={styles.nitnemeItemDuration}>
+                    {formatTime(item.duration)}
+                  </Text>
+                </View>
+                
+                <View style={styles.nitnemeItemControls}>
+                  {currentTrackInfo?.id === item.id && audioPlayer.playbackStatus.isPlaying ? (
+                    <View style={styles.playingIndicator}>
+                      <View style={styles.playingBar} />
+                      <View style={styles.playingBar} />
+                      <View style={styles.playingBar} />
+                    </View>
+                  ) : (
+                    <Play size={16} color="#10b981" fill="#10b981" />
+                  )}
+                </View>
+              </TouchableOpacity>
+            ))}
           </View>
         </View>
 
-        {/* Playlist */}
-        <View style={styles.playlistSection}>
-          <Text style={styles.sectionTitle}>Gurbani Playlist</Text>
-          {playlist.map((item, index) => (
-            <TouchableOpacity 
-              key={item.id} 
-              style={[
-                styles.playlistItem,
-                currentTrackInfo?.id === item.id && styles.playlistItemActive
-              ]}
-              onPress={() => handlePlayTrack(item.baniId)}
-            >
-              <View style={styles.playlistItemNumber}>
-                <Text style={styles.playlistItemNumberText}>{index + 1}</Text>
-              </View>
-              
-              <View style={styles.playlistItemInfo}>
-                <Text style={[
-                  styles.playlistItemTitle,
-                  currentTrackInfo?.id === item.id && styles.playlistItemTitleActive
-                ]}>
-                  {item.title}
-                </Text>
-                <Text style={styles.playlistItemTitleGurmukhi}>{item.titleGurmukhi}</Text>
-                <Text style={styles.playlistItemArtist}>{item.artist}</Text>
-              </View>
-              
-              <View style={styles.playlistItemMeta}>
-                <Text style={styles.playlistItemDuration}>
-                  {formatTime(item.duration)}
-                </Text>
-                {currentTrackInfo?.id === item.id && audioPlayer.playbackStatus.isPlaying && (
-                  <View style={styles.playingIndicator}>
-                    <View style={styles.playingBar} />
-                    <View style={styles.playingBar} />
-                    <View style={styles.playingBar} />
-                  </View>
-                )}
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
+        {/* Other Banis */}
+        {otherBanis.length > 0 && (
+          <View style={styles.otherBanisSection}>
+            <Text style={styles.sectionTitle}>Other Banis</Text>
+            {otherBanis.map((item, index) => (
+              <TouchableOpacity 
+                key={item.id} 
+                style={[
+                  styles.playlistItem,
+                  currentTrackInfo?.id === item.id && styles.playlistItemActive
+                ]}
+                onPress={() => handlePlayTrack(item.baniId)}
+              >
+                <View style={styles.playlistItemNumber}>
+                  <Text style={styles.playlistItemNumberText}>{nitnems.length + index + 1}</Text>
+                </View>
+                
+                <View style={styles.playlistItemInfo}>
+                  <Text style={[
+                    styles.playlistItemTitle,
+                    currentTrackInfo?.id === item.id && styles.playlistItemTitleActive
+                  ]}>
+                    {item.title}
+                  </Text>
+                  <Text style={styles.playlistItemTitleGurmukhi}>{item.titleGurmukhi}</Text>
+                  <Text style={styles.playlistItemArtist}>{item.artist}</Text>
+                </View>
+                
+                <View style={styles.playlistItemMeta}>
+                  <Text style={styles.playlistItemDuration}>
+                    {formatTime(item.duration)}
+                  </Text>
+                  {currentTrackInfo?.id === item.id && audioPlayer.playbackStatus.isPlaying && (
+                    <View style={styles.playingIndicator}>
+                      <View style={styles.playingBar} />
+                      <View style={styles.playingBar} />
+                      <View style={styles.playingBar} />
+                    </View>
+                  )}
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
       </ScrollView>
 
       {/* Audio Players */}
@@ -388,33 +427,84 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontWeight: '600',
   },
-  quickActionsSection: {
+  nitnemeSection: {
+    marginBottom: 32,
+  },
+  nitnemeHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 8,
   },
-  quickActionsContainer: {
-    flexDirection: 'row',
+  nitnemeHeaderText: {
+    marginLeft: 12,
+    flex: 1,
+  },
+  nitnemeSubtitle: {
+    fontSize: 14,
+    color: '#10b981',
+    fontWeight: '500',
+  },
+  nitnemeDescription: {
+    fontSize: 14,
+    color: '#9ca3af',
+    lineHeight: 20,
+    marginBottom: 20,
+  },
+  nitnemeGrid: {
     gap: 12,
   },
-  quickActionCard: {
-    flex: 1,
-    backgroundColor: '#1a1a1a',
-    borderRadius: 16,
-    padding: 20,
+  nitnemeItem: {
+    flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#1a1a1a',
+    borderRadius: 12,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#374151',
   },
-  quickActionTitle: {
+  nitnemeItemActive: {
+    backgroundColor: '#10b981',
+    borderColor: '#10b981',
+  },
+  nitnemeItemNumber: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#374151',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  nitnemeItemNumberText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#ffffff',
+  },
+  nitnemeItemInfo: {
+    flex: 1,
+  },
+  nitnemeItemTitle: {
     fontSize: 16,
     fontWeight: '600',
     color: '#ffffff',
-    marginTop: 12,
+    marginBottom: 2,
+  },
+  nitnemeItemTitleActive: {
+    color: '#000000',
+  },
+  nitnemeItemTitleGurmukhi: {
+    fontSize: 14,
+    color: '#d1d5db',
     marginBottom: 4,
   },
-  quickActionSubtitle: {
+  nitnemeItemDuration: {
     fontSize: 12,
     color: '#9ca3af',
-    textAlign: 'center',
   },
-  playlistSection: {
+  nitnemeItemControls: {
+    marginLeft: 12,
+  },
+  otherBanisSection: {
     marginBottom: 100,
   },
   playlistItem: {
