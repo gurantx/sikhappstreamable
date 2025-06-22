@@ -2,6 +2,7 @@
 import { Platform } from 'react-native';
 import { gurbaniDataService } from './gurbaniDataService';
 import { chaupaiSahibService } from './chaupaiSahibService';
+import { japjiSahibService } from './japjiSahibService';
 import { jaapSahibService } from './jaapSahibService';
 import { tavPrasadSavayeService } from './tavPrasadSavayeService';
 import { anandSahibService } from './anandSahibService';
@@ -68,8 +69,8 @@ class GurbaniService {
       let baniContent: BaniContent | null = null;
 
       switch (baniId) {
-        case '1': // Japji Sahib
-          baniContent = await gurbaniDataService.getCompleteJapjiSahib();
+        case '1': // Japji Sahib - Complete implementation
+          baniContent = await japjiSahibService.getCompleteJapjiSahib();
           break;
         case '2': // Jaap Sahib - Complete implementation
           baniContent = await jaapSahibService.getCompleteJaapSahib();
@@ -418,7 +419,7 @@ class GurbaniService {
             translation: 'There is one God whose name is Truth...'
           }
         ],
-        totalVerses: 40,
+        totalVerses: 42,
         granth: 'Guru Granth Sahib'
       },
       '2': {
@@ -490,6 +491,7 @@ class GurbaniService {
   async searchGurbani(query: string): Promise<GurbaniVerse[]> {
     try {
       // Include all bani services in search
+      const japjiResults = await japjiSahibService.searchJapjiSahib(query);
       const chaupaiResults = await chaupaiSahibService.searchChaupaiSahib(query);
       const jaapResults = await jaapSahibService.searchJaapSahib(query);
       const tavPrasadResults = await tavPrasadSavayeService.searchTavPrasadSavaiye(query);
@@ -498,6 +500,11 @@ class GurbaniService {
       const otherResults = await gurbaniDataService.searchGurbani(query);
       
       // Convert results to GurbaniVerse format
+      const convertedJapjiResults: GurbaniVerse[] = japjiResults.map(verse => ({
+        ...verse,
+        verseType: verse.verseType as any
+      }));
+
       const convertedChaupaiResults: GurbaniVerse[] = chaupaiResults.map(verse => ({
         ...verse,
         verseType: verse.verseType as any
@@ -518,7 +525,7 @@ class GurbaniService {
         verseType: verse.verseType as any
       }));
       
-      return [...convertedChaupaiResults, ...convertedJaapResults, ...convertedTavPrasadResults, ...convertedAnandResults, ...ggsResults, ...otherResults];
+      return [...convertedJapjiResults, ...convertedChaupaiResults, ...convertedJaapResults, ...convertedTavPrasadResults, ...convertedAnandResults, ...ggsResults, ...otherResults];
     } catch (error) {
       console.error('Search error:', error);
       return [];
@@ -529,7 +536,7 @@ class GurbaniService {
   async getAudioTrack(baniId: string): Promise<AudioTrack | null> {
     const audioMap: { [key: string]: AudioTrack } = {
       '1': {
-        url: 'https://www.sikhnet.com/files/audio/japji-sahib-bhai-harjinder-singh.mp3',
+        url: 'https://cdn.jsdelivr.net/gh/gurantx/streamsikh@main/Japji-Sahib.mp3',
         title: 'Japji Sahib',
         artist: 'Bhai Harjinder Singh',
         duration: 1800
@@ -612,6 +619,7 @@ class GurbaniService {
   clearCache(): void {
     this.cache.clear();
     gurbaniDataService.clearCache();
+    japjiSahibService.clearCache();
     chaupaiSahibService.clearCache();
     jaapSahibService.clearCache();
     tavPrasadSavayeService.clearCache();
