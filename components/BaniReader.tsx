@@ -151,7 +151,7 @@ export default function BaniReader({ baniId, onBack, onNextBani }: BaniReaderPro
     });
   };
 
-  // Horizontal gesture handling
+  // Combined gesture handling for both swipe and tap
   const panGesture = Gesture.Pan()
     .onUpdate((event) => {
       const sensitivity = 0.8;
@@ -200,6 +200,26 @@ export default function BaniReader({ baniId, onBack, onNextBani }: BaniReaderPro
         scale.value = withSpring(1, { damping: 20, stiffness: 300 });
       }
     });
+
+  // Tap gesture for left and right sides
+  const tapGesture = Gesture.Tap()
+    .onEnd((event) => {
+      const tapX = event.x;
+      const screenWidth = width;
+      
+      // Left side tap (first 40% of screen) - go to previous verse
+      if (tapX < screenWidth * 0.4) {
+        runOnJS(goToPreviousVerse)();
+      }
+      // Right side tap (last 40% of screen) - go to next verse
+      else if (tapX > screenWidth * 0.6) {
+        runOnJS(goToNextVerse)();
+      }
+      // Middle area (20%) - no action to avoid accidental navigation
+    });
+
+  // Combine gestures
+  const combinedGesture = Gesture.Race(panGesture, tapGesture);
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -411,7 +431,7 @@ export default function BaniReader({ baniId, onBack, onNextBani }: BaniReaderPro
       )}
 
       {/* Main Content with Gesture Detection and Scrolling */}
-      <GestureDetector gesture={panGesture}>
+      <GestureDetector gesture={combinedGesture}>
         <Animated.View style={[styles.content, animatedStyle]}>
           <ScrollView 
             style={styles.scrollContainer}
@@ -493,13 +513,13 @@ export default function BaniReader({ baniId, onBack, onNextBani }: BaniReaderPro
             </View>
           </ScrollView>
 
-          {/* Swipe Indicator */}
-          <View style={styles.swipeIndicator}>
-            <View style={styles.swipeHint}>
-              <Text style={styles.swipeHintText}>
-                {currentVerseIndex === 0 ? '← Swipe left for next' : 
-                 currentVerseIndex === baniContent.verses.length - 1 ? '→ Swipe right for previous' :
-                 '← Next  → Previous'}
+          {/* Tap Areas Indicator */}
+          <View style={styles.tapIndicator}>
+            <View style={styles.tapHint}>
+              <Text style={styles.tapHintText}>
+                {currentVerseIndex === 0 ? 'Tap right for next' : 
+                 currentVerseIndex === baniContent.verses.length - 1 ? 'Tap left for previous' :
+                 'Tap left: previous • Tap right: next'}
               </Text>
             </View>
           </View>
@@ -846,20 +866,20 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 16,
   },
-  swipeIndicator: {
+  tapIndicator: {
     position: 'absolute',
     bottom: 20,
     left: 0,
     right: 0,
     alignItems: 'center',
   },
-  swipeHint: {
+  tapHint: {
     backgroundColor: 'rgba(26, 26, 26, 0.8)',
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
   },
-  swipeHintText: {
+  tapHintText: {
     color: '#9ca3af',
     fontSize: 12,
     textAlign: 'center',
