@@ -238,12 +238,17 @@ class AudioService {
 export const audioService = new AudioService();
 
 // Audio tracks for each Nitnem bani - Using web-compatible audio URLs
+// NOTE: These are sample URLs for demonstration. In production, you would need to:
+// 1. Host your own audio files on a CDN
+// 2. Use a Gurbani audio API service
+// 3. Link to authorized Gurbani audio sources
+// For now, using a test MP3 file to demonstrate functionality
 export const NITNEM_AUDIO_TRACKS: { [baniId: string]: AudioTrack } = {
   '1': {
     id: 'japji_sahib',
     title: 'Japji Sahib',
     artist: 'Bhai Harjinder Singh',
-    url: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3',
+    url: 'https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3',
     duration: 1800000, // 30 minutes in milliseconds
     baniId: '1'
   },
@@ -251,7 +256,7 @@ export const NITNEM_AUDIO_TRACKS: { [baniId: string]: AudioTrack } = {
     id: 'jaap_sahib',
     title: 'Jaap Sahib',
     artist: 'Bhai Harjinder Singh',
-    url: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3',
+    url: 'https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3',
     duration: 2400000, // 40 minutes
     baniId: '2'
   },
@@ -259,7 +264,7 @@ export const NITNEM_AUDIO_TRACKS: { [baniId: string]: AudioTrack } = {
     id: 'tav_prasad_savaiye',
     title: 'Tav Prasad Savaiye',
     artist: 'Bhai Harjinder Singh',
-    url: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3',
+    url: 'https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3',
     duration: 480000, // 8 minutes
     baniId: '3'
   },
@@ -267,7 +272,7 @@ export const NITNEM_AUDIO_TRACKS: { [baniId: string]: AudioTrack } = {
     id: 'chaupai_sahib',
     title: 'Chaupai Sahib',
     artist: 'Bhai Harjinder Singh',
-    url: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3',
+    url: 'https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3',
     duration: 600000, // 10 minutes
     baniId: '4'
   },
@@ -275,7 +280,7 @@ export const NITNEM_AUDIO_TRACKS: { [baniId: string]: AudioTrack } = {
     id: 'anand_sahib',
     title: 'Anand Sahib',
     artist: 'Bhai Harjinder Singh',
-    url: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3',
+    url: 'https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3',
     duration: 1200000, // 20 minutes
     baniId: '5'
   },
@@ -283,7 +288,7 @@ export const NITNEM_AUDIO_TRACKS: { [baniId: string]: AudioTrack } = {
     id: 'rehras_sahib',
     title: 'Rehras Sahib',
     artist: 'Bhai Harjinder Singh',
-    url: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3',
+    url: 'https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3',
     duration: 900000, // 15 minutes
     baniId: '6'
   },
@@ -291,7 +296,7 @@ export const NITNEM_AUDIO_TRACKS: { [baniId: string]: AudioTrack } = {
     id: 'kirtan_sohila',
     title: 'Kirtan Sohila',
     artist: 'Bhai Harjinder Singh',
-    url: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3',
+    url: 'https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3',
     duration: 300000, // 5 minutes
     baniId: '8'
   },
@@ -299,7 +304,7 @@ export const NITNEM_AUDIO_TRACKS: { [baniId: string]: AudioTrack } = {
     id: 'sukhmani_sahib',
     title: 'Sukhmani Sahib',
     artist: 'Bhai Harjinder Singh',
-    url: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3',
+    url: 'https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3',
     duration: 3600000, // 60 minutes
     baniId: '10'
   }
